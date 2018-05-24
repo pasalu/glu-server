@@ -11,10 +11,30 @@
 |
 */
 
+use App\JobSubmitter;
+use Illuminate\Http\Request;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/task', function () {
-    return "Task route hit";
+Route::post('task', function (Request $request) {
+    $command = $request->input('command');
+    $priority = $request->input('priority');
+    
+    $jobsSubmitter = new JobSubmitter();
+    $jobID = $jobsSubmitter->submit($command, $priority);
+
+    return ['jobID' => $jobID];
+});
+
+Route::get('phpinfo', function () {
+    phpinfo();
+});
+
+Route::post('second', function () {
+    return response()->json([
+        'first' => 'Peter',
+        'last' => 'Salu'
+    ]);
 });

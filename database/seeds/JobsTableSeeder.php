@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Seeder;
 use App\Jobs;
-// use Illuminate\Support\Facades\DB;
 
 class JobsTableSeeder extends Seeder
 {
