@@ -12,6 +12,7 @@
 */
 
 use App\JobSubmitter;
+use App\JobProcessor;
 use Illuminate\Http\Request;
 
 Route::get('/', function () {
@@ -24,6 +25,13 @@ Route::post('task', function (Request $request) {
     
     $jobsSubmitter = new JobSubmitter();
     $jobID = $jobsSubmitter->submit($command, $priority);
+
+    return ['jobID' => $jobID];
+});
+
+Route::get('getJob', function () {
+    $jobProcessor = new JobProcessor();
+    $jobID = $jobProcessor->getJobToProcess();
 
     return ['jobID' => $jobID];
 });
