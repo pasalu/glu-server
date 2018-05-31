@@ -20,7 +20,9 @@ class CreateJobsTable extends Migration
             $table->string('processorID')->nullable();
             $table->enum('status', ['SUBMITTED', 'PROCESSING', 'FINISHED']);
             $table->string('command');
+            $table->string('output', 1024)->nullable();
             $table->dateTime('submittedOn');
+            $table->dateTime('finishedOn')->nullable();
             $table->integer('priority');
         });
     }

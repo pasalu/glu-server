@@ -9,6 +9,10 @@ class JobSubmitter
 {
     private $submitterID;
 
+    /**
+     * JobSubmitter constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         // Using UUID's here to avoid other job submitters knowing about each
@@ -29,6 +33,7 @@ class JobSubmitter
             'submitterID' => $this->submitterID,
             'status' =>'SUBMITTED',
             'command' => $command,
+            'output' => NULL,
             'priority' => $priority,
             'submittedOn' => now()
         ])->id;
