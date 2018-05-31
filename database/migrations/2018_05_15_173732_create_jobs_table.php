@@ -17,7 +17,6 @@ class CreateJobsTable extends Migration
             $table->increments('jobID');
             $table->timestamps();
             $table->string('submitterID');
-            $table->string('processorID')->nullable();
             $table->enum('status', ['SUBMITTED', 'PROCESSING', 'FINISHED']);
             $table->string('command');
             $table->string('output', 1024)->nullable();

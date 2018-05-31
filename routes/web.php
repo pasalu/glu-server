@@ -29,7 +29,7 @@ Route::post('task', function (Request $request) {
     return ['jobID' => $jobID];
 });
 
-Route::get('getJob', function () {
+Route::get('task', function () {
     $jobProcessor = new JobProcessor();
     $jobID = $jobProcessor->getJobToProcess();
 
@@ -40,9 +40,3 @@ Route::get('phpinfo', function () {
     phpinfo();
 });
 
-Route::post('second', function () {
-    return response()->json([
-        'first' => 'Peter',
-        'last' => 'Salu'
-    ]);
-});

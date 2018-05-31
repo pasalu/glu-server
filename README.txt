@@ -5,11 +5,14 @@ Once the Vagrant box is running use:
 vagrant ssh
 to ssh in.
 
+Once in to create the database use:
+cd code
+php artisan migrate:fresh
+to create the database table(s).
+
 To run the tests use:
 composer test --verbose
 or
 phpunit
 
-If you have php installed locally use:
-php artisan serve
-to start up the web server.
+The routes to hit are in web.php
