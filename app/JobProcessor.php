@@ -59,6 +59,10 @@ class JobProcessor
         return $jobID;
     }
 
+    /**
+     * @param int $jobID
+     * @return string The output of the job.
+     */
     public function process($jobID)
     {
         $commandOutput =
@@ -84,6 +88,27 @@ class JobProcessor
             ]);
 
         return $output;
+    }
+
+    /**
+     * @param int $jobID
+     * @return string
+     * @throws \Exception
+     */
+    public function getStatus($jobID)
+    {
+        $result =
+            DB::table('jobs')
+                ->select('status')
+                ->where('jobID', $jobID)
+                ->first();
+
+        if (!$result) {
+            Log::error("Invalid jobID $jobID");
+            throw new \Exception("Invalid jobID $jobID");
+        }
+
+        return $result->status;
     }
 }
 

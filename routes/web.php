@@ -36,6 +36,13 @@ Route::get('task', function () {
     return ['jobID' => $jobID];
 });
 
+Route::get('task/{jobID}', function($jobID) {
+    $jobProcessor = new JobProcessor();
+    $status = $jobProcessor->getStatus($jobID);
+
+    return ['status' => $status];
+});
+
 Route::post('process/{jobID?}', function ($jobID = null) {
     $jobProcessor = new JobProcessor();
 
