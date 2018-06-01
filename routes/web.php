@@ -36,6 +36,18 @@ Route::get('task', function () {
     return ['jobID' => $jobID];
 });
 
+Route::post('process/{jobID?}', function ($jobID = null) {
+    $jobProcessor = new JobProcessor();
+
+    if ($jobID === null) {
+        $jobID = $jobProcessor->getJobToProcess();
+    }
+
+    $output = $jobProcessor->process($jobID);
+
+    return ['output' => $output];
+});
+
 Route::get('phpinfo', function () {
     phpinfo();
 });

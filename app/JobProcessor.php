@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\Process\Process;
 
 class JobProcessor
 {
@@ -16,12 +17,13 @@ class JobProcessor
         DB::beginTransaction();
 
         /**
-         * Using for update in a transaction prevents the same job from being assigned to 2 job processors.
+         * Using "for update" in a transaction prevents the same job from being assigned to 2 job processors.
          *
          * SELECT jobid
          * FROM   jobs
          * WHERE  priority = (SELECT Max(priority)
-         *                    FROM   jobs)
+         *                    FROM   jobs
+         *                    WHERE status = 'SUBMITTED')
          * AND status = 'SUBMITTED'
          * GROUP  BY jobid
          * LIMIT  1
@@ -30,7 +32,9 @@ class JobProcessor
         $job =
             DB::table('jobs')
                 ->select('jobID')
-                ->whereRaw("priority = (SELECT MAX(priority) FROM jobs) and status = 'SUBMITTED'")
+                ->whereRaw(
+                    "priority = (SELECT MAX(priority) FROM jobs WHERE status = 'SUBMITTED') and status = 'SUBMITTED'"
+                )
                 ->groupBy('jobID')
                 ->limit(1)
                 ->lockForUpdate()
@@ -53,6 +57,33 @@ class JobProcessor
         DB::commit();
 
         return $jobID;
+    }
+
+    public function process($jobID)
+    {
+        $commandOutput =
+            DB::table('jobs')
+                ->select('command')
+                ->where('jobID', $jobID)
+                ->first();
+
+        $command = $commandOutput->command;
+
+        Log::info("Running: '$command' JobID: $jobID");
+
+        $process = new Process($command);
+        $process->run();
+        $output = $process->getOutput();
+
+        DB::table('jobs')
+            ->where('jobID', $jobID)
+            ->update([
+                'output' => $output,
+                'finishedOn' => now(),
+                'status' => 'FINISHED'
+            ]);
+
+        return $output;
     }
 }
 
