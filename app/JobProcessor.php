@@ -47,9 +47,6 @@ class JobProcessor
 
         $jobID = $job->jobID;
 
-        Log::info("Job: " . var_export($job, true));
-        Log::info("JobID: " . $jobID);
-
         DB::table('jobs')
             ->where('jobID', $jobID)
             ->update(['status' => 'PROCESSING']);
@@ -104,7 +101,6 @@ class JobProcessor
                 ->first();
 
         if (!$result) {
-            Log::error("Invalid jobID $jobID");
             throw new \Exception("Invalid jobID $jobID");
         }
 

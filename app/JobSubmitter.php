@@ -10,7 +10,6 @@ class JobSubmitter
     private $submitterID;
 
     /**
-     * JobSubmitter constructor.
      * @throws \Exception
      */
     public function __construct()
@@ -27,7 +26,7 @@ class JobSubmitter
      * @param int $priority
      * @return int
      */
-    public function submit(string $command, int $priority): int
+    public function submit($command, $priority)
     {
         $jobID = Jobs::create([
             'submitterID' => $this->submitterID,
