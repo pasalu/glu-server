@@ -106,5 +106,18 @@ class JobProcessor
 
         return $result->status;
     }
-}
 
+    /**
+     * @return string
+     */
+    public function getAverageProcessingTime()
+    {
+        $result = DB::select('
+              SELECT sec_to_time(avg(time_to_sec(timediff(finishedon, submittedon)))) as average
+              FROM   jobs 
+              WHERE  status = "finished"
+         ');
+
+        return $result[0]->average;
+    }
+}
