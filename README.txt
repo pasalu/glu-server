@@ -10,6 +10,9 @@ cd code
 php artisan migrate:fresh
 to create the database table(s).
 
+To connect to the database use:
+mysql --user=homestead --password=secret --database=homestead
+
 To run the tests use:
 composer test --verbose
 or

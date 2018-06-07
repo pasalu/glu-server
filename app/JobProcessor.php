@@ -29,7 +29,7 @@ class JobProcessor
          * LIMIT  1
          * FOR UPDATE
          */
-        $job =
+        $result =
             DB::table('jobs')
                 ->select('jobID')
                 ->whereRaw(
@@ -40,12 +40,12 @@ class JobProcessor
                 ->lockForUpdate()
                 ->first();
 
-        if (!$job) {
+        if (!$result) {
             DB::rollBack();
             throw new \Exception("No available jobs!");
         }
 
-        $jobID = $job->jobID;
+        $jobID = $result->jobID;
 
         DB::table('jobs')
             ->where('jobID', $jobID)
@@ -59,16 +59,21 @@ class JobProcessor
     /**
      * @param int $jobID
      * @return string The output of the job.
+     * @throws \Exception
      */
     public function process($jobID)
     {
-        $commandOutput =
+        $result =
             DB::table('jobs')
                 ->select('command')
                 ->where('jobID', $jobID)
                 ->first();
 
-        $command = $commandOutput->command;
+        if (!$result) {
+            throw new \Exception("Invalid jobID: $jobID");
+        }
+
+        $command = $result->command;
 
         Log::info("Running: '$command' JobID: $jobID");
 
@@ -109,6 +114,7 @@ class JobProcessor
 
     /**
      * @return string
+     * @throws \Exception
      */
     public function getAverageProcessingTime()
     {
@@ -118,6 +124,12 @@ class JobProcessor
               WHERE  status = "finished"
          ');
 
-        return $result[0]->average;
+        $average = $result[0]->average;
+
+        if (!$average) {
+            throw new \Exception("No available jobs!");
+        }
+
+        return $average;
     }
 }
