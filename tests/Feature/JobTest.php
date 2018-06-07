@@ -4,9 +4,12 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\JobSubmitter;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class JobSubmitterTest extends TestCase
+class JobTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @var JobSubmitter */
     private $jobsSubmitter;
 
@@ -17,8 +20,17 @@ class JobSubmitterTest extends TestCase
         $this->assertInternalType('int', $jobID);
     }
 
-    public function setup()
+    public function testGetTaskWhenNoTasksExpect500()
     {
+        $result = $this->get('/task');
+
+        $result->assertStatus(500);
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+
         $this->jobSubmitter = new JobSubmitter();
     }
 }

@@ -52,7 +52,7 @@
             "@php artisan package:discover"
         ],
         "test": [
-            "vendor\\bin\\phpunit"
+            "vendor/bin/phpunit"
         ]
     },
     "config": {
