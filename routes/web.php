@@ -57,7 +57,9 @@ Route::post('process/{jobID?}', function ($jobID = null) {
 
 Route::get('getAverageProcessingTime', function () {
     $jobProcessor = new JobProcessor();
-    return $jobProcessor->getAverageProcessingTime();
+    $average = $jobProcessor->getAverageProcessingTime();
+
+    return ['average' => $average];
 });
 
 Route::get('phpinfo', function () {
